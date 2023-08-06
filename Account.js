@@ -1,37 +1,55 @@
-const BankPassbook=require("./BankPassbook")
+const PassBook = require("./PassBook")
+const ValidationError = require("./error/ValidationError")
+const UnauthorizedError = require("./error/UnAuthorizedError")
+const NotFound = require("./error/NotFound")
 
 class Account{
-    static AccountNumber=0
-
-    constructor(userDeposit){
-          this.userAccountNumber=Account.AccountNumber++
-          this.userDeposit=userDeposit
-          this.passbook=[]
-       
+    static accountId = 0
+    constructor(balance){
+        this.id = Account.accountId++
+        this.balance = balance
+        this.passBook = []
     }
 
-    deposite(balance)
-    {
-        //   this.userDeposit=this.userDeposit + balance
-        //   let passbooks=new BankPassbook(new Date(),this.userDeposit,"deposite",this.userAccountNumber)
-        //   this.passbook.push(passbooks)
-        //   return new Account(this.userDeposit)
-        let balance=0
-        if(balance>=1000)
-        {
-            balance+=amount
-            return balance
+    getAccountId(){
+        return this.id
+    }
+
+    getBalance(){
+        return this.balance
+    }
+
+    deposit(amount){
+        try {
+            if(typeof amount != "number" || amount<0){
+                throw new ValidationError("amount not valid")
+            }
+            this.balance = this.balance+amount
+            let passBookObj = new PassBook(new Date(), "credited", amount, this.balance)
+            this.passBook.push(passBookObj)
+            return this.balance
+        } catch (error) {
+            throw error
         }
-        return "-1"
     }
 
-    withdraw(balance){
-        this.userDeposit=this.userDeposit-balance
-
+    withdraw(amount){
+        try {
+            if(typeof amount != "number" || (amount<0 || amount > this.balance)){
+                throw new ValidationError("amount not valid")
+            }
+            this.balance = this.balance-amount
+            let passBookObj = new PassBook(new Date(), "debited", amount, this.balance)
+            this.passBook.push(passBookObj)
+            return this.balance
+        } catch (error) {
+            throw error
+        }
     }
-
-    getPassbook(){
-
+    
+    getPassBook(){
+        return this.passBook
     }
 }
-module.exports=Account
+
+module.exports = Account

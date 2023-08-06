@@ -1,10 +1,10 @@
 class BankPassBook{
-    constructor(date,balance,type,accountNumber){
-        this.date=date
-        this.balance=balance
-        this.type=type
-        this.accountNumber=accountNumber
+    constructor(date, status, amount, balance){
+        this.date = date
+        this.status = status
+        this.amount = amount
+        this.balance = balance
     }
 }
 
-module.exports=BankPassBook
+module.exports = BankPassBook
